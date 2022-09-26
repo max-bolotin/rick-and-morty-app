@@ -274,8 +274,25 @@ public class Main {
         System.out.println(Arrays.toString(separateWheatFromChaff(new long[]{7, -8, 1, -2})));
 
         System.out.println(isPrime("aseaseasee"));
+
+        System.out.println(isTidy(125648));
+
+        System.out.println(findUnique(new double[]{2,2, 2,3,2}));
     }
 
+    public static double findUnique(double nums[]) {
+        Arrays.sort(nums);
+        return nums[0] == nums[1] ? nums[nums.length - 1] : nums[0];
+    }
+
+    public static boolean isTidy(int number) {
+        String string = "" + number;
+        String sorted = string.chars()
+                .sorted()
+                .mapToObj(c -> String.valueOf((char) c))
+                .collect(Collectors.joining());
+        return sorted.equals(string);
+    }
 
     public static long[] separateWheatFromChaff(long[] nums) {
         int start = 0;
