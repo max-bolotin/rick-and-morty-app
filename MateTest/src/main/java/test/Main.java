@@ -1,5 +1,6 @@
 package test;
 
+import java.text.DecimalFormat;
 import java.time.ZoneId;
 import java.util.*;
 import java.util.Objects;
@@ -277,7 +278,494 @@ public class Main {
 
         System.out.println(isTidy(125648));
 
-        System.out.println(findUnique(new double[]{2,2, 2,3,2}));
+        System.out.println(findUnique(new double[]{2, 2, 2, 3, 2}));
+
+        System.out.println(toSimplePigLatin("The sentence of five words"));
+
+        System.out.println(mumble("sEfTg"));
+
+        System.out.println(getNthPerson
+        (new String[]{"Batman", "Superman", "Spiderman", "Wonderwoman", "Antman"}, 23));
+
+        System.out.println(modifyData("Program title: Nail\nAuthor: Schwarz\nCorporation: Asus\nPhone: +1-503-555-0072\nDate: Tues March 10, 2004\nVersion: 0.2\nLevel: Release", "Circular", "1.7"));
+
+        System.out.println(Integer.parseInt("1111", 2));
+
+        System.out.println(wordss.replaceAll("i", "[i]"));
+
+        System.out.println(orderWeights("500 600 1003 41 800000 "));
+
+        System.out.println(Arrays.deepToString(multiplySquareMatrices(
+                new int[][]{{9, 7}, {0, 1}}, new int[][]{{1, 1}, {4, 12}})));
+
+        System.out.println(extractRange(new int[]{-3, -2, -1, 2, 10, 15, 16, 18, 19, 20}));
+
+        System.out.println(findCubicNumbers("40702"));
+
+        System.out.println(formatDuration(94878183));
+
+        System.out.println(Arrays.toString(getSnail(
+                new int[][]{{2, 9, 10, 12}, {3, -3, 14, 52}, {19, 18, 4, 7}, {10, 0, 8, 41}})));
+
+        System.out.println(isEndsWith("abc", "bc"));
+
+        System.out.println(countIPBetween("50.0.0.0", "50.1.1.1"));
+
+        System.out.println(sellTickets(new int[]{25, 25, 50, 50, 25, 50, 25, 100, 25, 50}));
+
+        System.out.println(Arrays.toString(sortArray(new String[]{"3", "1", "2"})));
+        System.out.println(Arrays.toString(sortArray(new Integer[]{3, 1, 2})));
+        System.out.println(Arrays.toString(sortArray(new int[]{3, 1, 2})));
+        System.out.println(Arrays.toString(sortArray(new double[]{3.0, 1, 2})));
+        System.out.println(Arrays.toString(sortArray(new float[]{3, 1, 2})));
+
+        System.out.println(calculateRotations("coffee", "eecoff"));
+
+        System.out.println(numberOfDividers(30));
+
+        System.out.println(isAscOrder(new int[]{1,6,10}));
+
+        System.out.println(createPassphrase("BORN IN 2015!", 1));
+
+        System.out.println(findPairs(new int[]{1, 4, 4, 4, 1}));
+
+        System.out.println(getAveragePercentage("466960, 069060, 494940, 060069, 060090, 640009, 496464, 606900, 004000, 944096"));
+    }
+
+
+    public static double getAveragePercentage(String string) {
+        String[] splitString = string.split(", ");
+        double combinations = String.valueOf(splitString[0]).length() * splitString.length * (splitString.length - 1) / 2D;
+        int count = 0;
+        for (int i = 0; i < splitString.length - 1; i++) {
+            for (int k = i + 1; k < splitString.length; k++) {
+                StringBuilder first = new StringBuilder(splitString[i]);
+                StringBuilder second = new StringBuilder(splitString[k]);
+                 do {
+                    if (first.charAt(0) == second.charAt(0)) {
+                        count++;
+                    }
+                    first.deleteCharAt(0);
+                    second.deleteCharAt(0);
+                } while (first.length() > 0);
+            }
+        }
+        System.out.println(count + " " + combinations);
+        return count / combinations * 100;
+    }
+
+    public static int findPairs(int[] nums) {
+        if (nums.length < 2) {
+            return 0;
+        }
+        List<Integer> numbersList = new ArrayList<>();
+        int count = 0;
+        for (int n : nums) {
+            if (numbersList.contains(n)) {
+                numbersList.remove(Integer.valueOf(n));
+                count++;
+            } else {
+                numbersList.add(n);
+            }
+        }
+        return count;
+    }
+
+
+    public static String createPassphrase(String phrase, int shift) {
+        StringBuilder sb = new StringBuilder();
+        int[] temp = phrase.toLowerCase().chars().toArray();
+        for (int i = 0; i < temp.length; i++) {
+            if (temp[i] >= 97 && temp[i] <= 122) {
+            int c = temp[i] + shift;
+                if (c > 122) {
+                    c -= 26;
+                }
+                String letter = String.valueOf((char) c);
+                if (i % 2 == 0) {
+                    sb.append(letter.toUpperCase());
+                } else {
+                    sb.append(letter.toLowerCase());
+                }
+            } else if (temp[i] >= 48 && temp[i] <= 57) {
+                sb.append(57 - temp[i]);
+            } else {
+                sb.append((char) temp[i]);
+            }
+        }
+        sb.reverse();
+        return sb.toString();
+    }
+
+    private static boolean isAscOrder(int[] ints) {
+        int[] temp = Arrays.copyOf(ints, ints.length);
+        Arrays.sort(temp);
+        return Arrays.equals(temp, ints);
+    }
+
+    private static int numberOfDividers(int i) {
+        return (int) IntStream.range(1, i + 1)
+                .filter(n -> i % n == 0)
+                .count();
+
+    }
+
+
+    public static int calculateRotations(String string1, String string2) {
+        if (string1.length() != string2.length()) {
+            return -1;
+        }
+        StringBuilder sb = new StringBuilder(string1);
+        int count = 0;
+        for (int i = string2.length() - 1; i > 0; i--) {
+            char c = sb.charAt(sb.length() - 1);
+            sb.deleteCharAt(sb.length() - 1);
+            sb.insert(0, c);
+            count++;
+            if (sb.toString().equals(string2)) {
+                return count;
+            }
+        }
+        return -1;
+    }
+
+    public static int[] sortArray(int[] names) {
+        return Arrays.stream(names).sorted().toArray();
+    }
+
+    public static double[] sortArray(double[] names) {
+        return Arrays.stream(names).sorted().toArray();
+    }
+
+    public static Integer[] sortArray(Integer[] names) {
+    Arrays.sort(names);
+    return names;
+    }
+
+    public static float[] sortArray(float[] names) {
+        Arrays.sort(names);
+        return names;
+    }
+
+    public static String[] sortArray(String[] names) {
+        /*List<String> strings = Arrays.stream(names)
+                .sorted()
+                .map(s -> (String) s)
+                .collect(Collectors.toList());
+        return strings.toArray(new String[0]);*/
+        Arrays.sort(names);
+        return names;
+    }
+
+    public static String sellTickets(int[] peopleInLine) {
+        int count25 = 0;
+        int count50 = 0;
+        for (int person : peopleInLine) {
+            if (person == 25) {
+                count25++;
+                continue;
+            }
+            if (person == 50) {
+                if (count25 > 0) {
+                    count25--;
+                    count50++;
+                    continue;
+                } else {
+                    return "NO";
+                }
+            }
+            if (count50 > 0 && count25 > 0) {
+                count50--;
+                count25--;
+            } else if (count25 > 2) {
+                count25 -= 2;
+            } else {
+                return "NO";
+            }
+        }
+        return "YES";
+    }
+
+
+    public static long countIPBetween(String start, String end) {
+        DecimalFormat df = new DecimalFormat("00000000");
+        StringBuilder startBinary = new StringBuilder();
+        StringBuilder endBinary = new StringBuilder();
+        String[] startArray = start.split("\\.");
+        String[] endArray = end.split("\\.");
+        for (String s : startArray) {
+            startBinary.append(df.format(Integer.valueOf(Integer.toBinaryString(Integer.parseInt(s)))));
+        }
+        for (String s : endArray) {
+            endBinary.append(df.format(Integer.valueOf(Integer.toBinaryString(Integer.parseInt(s)))));
+        }
+        return Long.valueOf(endBinary.toString(), 2) - Long.valueOf(startBinary.toString(), 2);
+    }
+
+    public static List<Character> getUniqueCharacters(String sourceString) {
+
+        return sourceString.chars()
+                .distinct()
+                .mapToObj(i -> (char) i)
+                .collect(Collectors.toList());
+    }
+
+    public static boolean isEndsWith(String string, String ending) {
+        return string.endsWith(ending);
+    }
+
+    public static int[] getSnail(int[][] nums) {
+        List<Integer> resList = new LinkedList<>();
+        int[] result = new int[(nums.length * nums.length)];
+        int count = 0;
+        int[][] clock = Arrays.copyOf(nums, nums[0].length);
+        while (clock.length > 0) {
+            for (int i = 0; i < clock[0].length; i++) {
+                resList.add(clock[0][i]);
+                result[count] = clock[0][i];
+                count++;
+            }
+            clock = turnArrayClockwise(clock);
+        }
+
+        return resList.stream().mapToInt(i -> i).toArray();
+    }
+
+    private static int[][] turnArrayClockwise(int[][] temp) {
+        int[][] clock = new int[temp[0].length][temp.length - 1];
+        for (int i = 0; i < clock.length; i++) {
+            for (int j = 0; j < clock[0].length; j++) {
+                clock[i][j] = temp[j + 1][temp[0].length - 1 - i];
+            }
+        }
+        return clock;
+    }
+
+
+    public static String formatDuration(int seconds) {
+        if (seconds == 0) {
+            return "now";
+        }
+        Queue<String> res = new ArrayDeque<>();
+        int year = seconds / (365 * 24 * 3600);
+        if (year > 0) {
+            res.add(year == 1 ? "1 year" : year + " years");
+        }
+
+        seconds = seconds % (365 * 24 * 3600);
+        int day = seconds / (24 * 3600);
+        if (day > 0) {
+            res.add(day == 1 ? "1 day" : day + " days");
+        }
+
+        seconds = seconds % (24 * 3600);
+        int hour = seconds / 3600;
+        if (hour > 0) {
+            res.add(hour == 1 ? "1 hour" : hour + " hours");
+        }
+
+        seconds %= 3600;
+        int minute = seconds / 60 ;
+        if (minute > 0) {
+            res.add(minute == 1 ? "1 minute" : minute + " minutes");
+        }
+
+        seconds %= 60;
+        int sec = seconds;
+        if (sec > 0) {
+            res.add(sec == 1 ? "1 second" : sec + " seconds");
+        }
+
+        int count = res.size();
+        if (count == 1) {
+            return res.peek();
+        }
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < count; i++) {
+            if (i == count - 1) {
+                result.deleteCharAt(result.length() - 1)
+                        .deleteCharAt(result.length() - 1)
+                        .append(" and ").append(res.remove());
+            } else {
+                result.append(res.remove()).append(", ");
+            }
+        }
+
+        return result.toString();
+    }
+
+
+    public static String findCubicNumbers(String string) {
+        StringBuilder sb = new StringBuilder(string);
+        List<StringBuilder> sbList = new ArrayList<>();
+        while (sb.length() != 0) {
+            if (!Character.isDigit(sb.charAt(0))) {
+                sb.deleteCharAt(0);
+                continue;
+            } else {
+                StringBuilder temp = new StringBuilder();
+                for (int i = 0; i < 3; i++) {
+                    temp.append(sb.charAt(0));
+                    sb.deleteCharAt(0);
+                    if (sb.length() != 0 && !Character.isDigit(sb.charAt(0))) {
+                        sb.deleteCharAt(0);
+                        break;
+                    }
+                    if (sb.length() == 0) {
+                        break;
+                    }
+                }
+                sbList.add(temp);
+            }
+        }
+        StringBuilder res = new StringBuilder();
+        int sum = 0;
+        for (StringBuilder element : sbList) {
+            int number = Integer.parseInt(String.valueOf(element));
+            double cubicSum = String.valueOf(element).chars()
+                    .mapToDouble(c -> Math.pow(c - 48, 3))
+                    .sum();
+            if (cubicSum == number) {
+                res.append(number).append(" ");
+                sum += number;
+            }
+        }
+        return res.length() == 0? "Unlucky" : res.append(sum).append(" Lucky").toString();
+    }
+
+
+    public static String extractRange(int[] nums) {
+        StringBuilder sb = new StringBuilder();
+        int rangeCounter = 0;
+        int rangeStart = 0;
+        int rangeEnd = 0;
+        for (int i = 0; i < nums.length; i++) {
+            if (i < nums.length - 1 && nums[i] == nums[i + 1] - 1) {
+                if (rangeCounter == 0) {
+                    rangeStart = nums[i];
+                }
+                rangeEnd = nums[i + 1];
+                rangeCounter++;
+            } else {
+                if (rangeCounter == 0) {
+                    sb.append(nums[i]).append(",");
+                    continue;
+                } else if (rangeCounter == 1){
+                    sb.append(rangeStart).append(",").append(rangeEnd).append(",");
+                } else {
+                    sb.append(rangeStart).append("-").append(rangeEnd).append(",");
+                }
+                rangeCounter = 0;
+            }
+        }
+        return sb.deleteCharAt(sb.length() - 1).toString();
+    }
+
+    public static int[][] multiplySquareMatrices(int[][] a, int[][] b) {
+        int[][] c = new int[a.length][a.length];
+        for (int i = 0; i < a.length; i++) {
+            for (int j = 0; j <a.length; j++) {
+                c[i][j] = findCell(a, b, i, j);
+            }
+        }
+        return c;
+    }
+
+    private static int findCell(int[][] a, int[][] b, int i, int j) {
+        int sum = 0;
+        int temp = 0;
+        for (int k = 0; k < a.length; k++) {
+            temp = a[i][k] * b[k][j];
+            sum += temp;
+        }
+        return sum;
+    }
+
+    public static String orderWeights(String weights) {
+        String[] numbers = weights.trim().split("\\s+");
+        System.out.println(Arrays.toString(numbers[0].chars().map(c -> c - 48).toArray()));
+        Comparator<String> comparator = (o1, o2) -> {
+            int i1 = o1.chars().map(c -> c - 48).sum();
+            int i2 = o2.chars().map(c -> c - 48).sum();
+            if (i1 > i2) {
+                return 1;
+            } else if (i1 < i2) {
+                return -1;
+            }
+            return o1.compareTo(o2);
+        };
+        System.out.println(Arrays.toString(numbers));
+        return Arrays.stream(numbers)
+                .sorted(comparator)
+                .collect(Collectors.joining(" "));
+
+    }
+
+    public static String modifyData(String data, String program, String version) {
+        String[] dataArray = data.split("\n");
+        Pattern pattern = Pattern.compile("^\\+1-\\d{3}-\\d{3}-\\d{4}");
+        Pattern vers = Pattern.compile("^\\d+\\.\\d+");
+        String phone = dataArray[3].substring(7);
+        String versionVal = dataArray[5].substring(9);
+        System.out.println(versionVal);
+        Matcher matcher = pattern.matcher(phone);
+        Matcher versionValid = vers.matcher(versionVal);
+        if (!matcher.matches() || !versionValid.matches()) {
+            return "ERROR: VERSION or PHONE";
+        }
+        dataArray[0] = "Program: " + program;
+        dataArray[1] = "Author: g964";
+        dataArray[3] = "Phone: +1-503-555-0090";
+        dataArray[4] = "Date: 2019-01-01";
+        dataArray[5] = versionVal.equals("2.0") ? dataArray[5] : "Version: " + version;
+        return dataArray[0] + "\n"
+                + dataArray[1] + "\n"
+                + dataArray[3] + "\n"
+                + dataArray[4] + "\n"
+                + dataArray[5] + "\n";
+    }
+
+
+    public static String getNthPerson(String[] names, int n) {
+        Deque<String> deque = new ArrayDeque<>(List.of(names));
+        int m = 1;
+        int k = 0;
+        for (int i = 1; i < n; i = i + m) {
+            String firstInQueue = deque.removeFirst();
+            deque.offerLast(firstInQueue);
+//            deque.offerLast(firstInQueue);
+            k++;
+            m *= k % names.length == 0 ? 2 : 1;
+        }
+        return deque.getFirst();
+    }
+
+    public static String mumble(String string) {
+        if (string.equals("")) {
+            return string;
+        }
+        StringBuilder res = new StringBuilder(String.valueOf(string.charAt(0)).toUpperCase());
+        for (int i = 1; i < string.length(); i++) {
+            res.append("-");
+            res.append(String.valueOf(string.charAt(i)).toUpperCase());
+            for (int j = 0; j < i; j++) {
+                res.append(String.valueOf(string.charAt(i)).toLowerCase());
+            }
+        }
+        return res.toString();
+    }
+
+
+    public static String toSimplePigLatin(String string) {
+        return Arrays.stream(string.split(" "))
+                .map(s -> {
+                    if (Character.isAlphabetic(s.charAt(0))) {
+                        char temp = s.charAt(0);
+                        return s.substring(1) + temp + "ay";
+                    }
+                    return s;
+                })
+                .collect(Collectors.joining(" "));
     }
 
     public static double findUnique(double nums[]) {
@@ -295,21 +783,22 @@ public class Main {
     }
 
     public static long[] separateWheatFromChaff(long[] nums) {
+        long[] n = Arrays.copyOf(nums, nums.length);
         int start = 0;
-        int end = nums.length - 1;
+        int end = n.length - 1;
         while (start <= end) {
-            if (nums[start] > 0) {
-                if (nums[end] < 0) {
-                    long temp = nums[start];
-                    nums[start] = nums[end];
-                    nums[end] = temp;
+            if (n[start] > 0) {
+                if (n[end] < 0) {
+                    long temp = n[start];
+                    n[start] = n[end];
+                    n[end] = temp;
                 }
                 end--;
             } else {
                 start++;
             }
         }
-        return nums;
+        return n;
     }
 
 
