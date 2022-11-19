@@ -225,7 +225,7 @@ public class Main {
         List<Employee> employees = asList(new Employee("a", 10, "male", "123"),
                 new Employee("b", 12, "female", "234"),
                 new Employee("c", 3, "female", "2346"));
-        System.out.println(employees.stream().max(Comparator.comparingInt(Employee::getAge)));
+        System.out.println(employees.stream().max(Comparator.comparingInt(employee -> employee.getAge())));
         System.out.println(employees.stream()
                 .collect(Collectors.toMap(p -> p.getAge() >= 12, p -> new ArrayList<>(Arrays.asList(p)), (a, b) -> {
                     a.addAll(b);
