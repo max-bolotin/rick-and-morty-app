@@ -8,12 +8,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.SequenceGenerator;
-
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "movie_character")
 public class MovieCharacter {
@@ -23,10 +22,11 @@ public class MovieCharacter {
     sequenceName = "movie_character_id_seq",
     allocationSize = 1)
     private Long id;
+    private Long externalId;
     private String name;
-//    @Enumerated(EnumType.STRING)
-    private String status;
-//    @Enumerated(EnumType.STRING)
-    private String gender;
+    @Enumerated(EnumType.STRING)
+    private Status status;
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
 
 }

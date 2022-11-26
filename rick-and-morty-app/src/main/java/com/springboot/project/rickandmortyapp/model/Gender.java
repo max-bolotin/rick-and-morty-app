@@ -1,6 +1,6 @@
 package com.springboot.project.rickandmortyapp.model;
 
-enum Gender {
+public enum Gender {
         FEMALE("Female"),
         MALE("Male"),
         GENDERLESS("Genderless"),
