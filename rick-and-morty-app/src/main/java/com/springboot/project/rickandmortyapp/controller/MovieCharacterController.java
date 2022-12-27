@@ -1,44 +1,39 @@
 package com.springboot.project.rickandmortyapp.controller;
 
+import com.springboot.project.rickandmortyapp.dto.CharacterResponseDto;
+import com.springboot.project.rickandmortyapp.dto.mapper.MovieCharacterMapper;
 import com.springboot.project.rickandmortyapp.model.MovieCharacter;
-import com.springboot.project.rickandmortyapp.repository.MovieCharacterRepository;
+import com.springboot.project.rickandmortyapp.service.MovieCharacterService;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-
 @RestController
-@RequestMapping("/")
+@RequestMapping("/movie-characters")
 public class MovieCharacterController {
-    private final MovieCharacterRepository repository;
+    private final MovieCharacterService characterService;
+    private final MovieCharacterMapper characterMapper;
 
-    public MovieCharacterController(MovieCharacterRepository repository) {
-        this.repository = repository;
+    public MovieCharacterController(MovieCharacterService characterService,
+                                    MovieCharacterMapper characterMapper) {
+        this.characterService = characterService;
+        this.characterMapper = characterMapper;
     }
 
-    @GetMapping
-    public String helloWorld() {
-        return "Hello World!!";
+    @GetMapping("/random")
+    public CharacterResponseDto getRandom() {
+        MovieCharacter randomCharacter = characterService.getRandomCharacter();
+        return characterMapper.toResponseDto(randomCharacter);
     }
 
-    @GetMapping("/all")
-    public List<MovieCharacter> getAll() {
-        return repository.findAll();
-    }
-
-    @PostMapping
-    public MovieCharacter saveCharacter(/*Long id,
-                                        */String name,
-                                        String status,
-                                        String gender) {
-        MovieCharacter movieCharacter = new MovieCharacter();
-//        movieCharacter.setId(id);
-        movieCharacter.setName(name);
-//        movieCharacter.setStatus(status);
-//        movieCharacter.setGender(gender);
-        return repository.save(movieCharacter);
+    @GetMapping("/by-name")
+    public List<CharacterResponseDto> getAllByNameContains(@RequestParam("name") String namePart) {
+        return characterService.findAllByNameContains(namePart).stream()
+                .map(characterMapper::toResponseDto)
+                .collect(Collectors.toList());
     }
 }
 

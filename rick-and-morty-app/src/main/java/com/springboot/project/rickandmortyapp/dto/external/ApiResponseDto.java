@@ -1,4 +1,4 @@
-package com.springboot.project.rickandmortyapp.dto;
+package com.springboot.project.rickandmortyapp.dto.external;
 
 import lombok.Data;
 

@@ -1,18 +1,23 @@
 package com.springboot.project.rickandmortyapp.service;
 
-import com.springboot.project.rickandmortyapp.dto.ApiCharacterDto;
-import com.springboot.project.rickandmortyapp.dto.ApiResponseDto;
+import com.springboot.project.rickandmortyapp.dto.external.ApiCharacterDto;
+import com.springboot.project.rickandmortyapp.dto.external.ApiResponseDto;
 import com.springboot.project.rickandmortyapp.dto.mapper.MovieCharacterMapper;
 import com.springboot.project.rickandmortyapp.model.MovieCharacter;
 import com.springboot.project.rickandmortyapp.repository.MovieCharacterRepository;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import javax.annotation.PostConstruct;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+@Log4j2
 @Service
 public class MovieCharacterServiceImpl implements MovieCharacterService {
     private final HttpClient httpClient;
@@ -27,8 +32,10 @@ public class MovieCharacterServiceImpl implements MovieCharacterService {
         this.mapper = mapper;
     }
 
+    @Scheduled(cron = "0 0 8 * * ?")
     @Override
     public void syncExternalCharacters() {
+        log.info("syncExternalCharacters was invoked on " + LocalDateTime.now());
         ApiResponseDto apiResponseDto = httpClient.get(
                 "https://rickandmortyapi.com/api/character", ApiResponseDto.class);
 
@@ -41,6 +48,18 @@ public class MovieCharacterServiceImpl implements MovieCharacterService {
         }
     }
 
+    @Override
+    public MovieCharacter getRandomCharacter() {
+        long count = movieCharacterRepository.count();
+        long randomId = (long) (Math.random() * count);
+        return movieCharacterRepository.getById(randomId);
+    }
+
+    @Override
+    public List<MovieCharacter> findAllByNameContains(String namePart) {
+        return movieCharacterRepository.findAllByNameContains(namePart);
+    }
+
     private void saveDtosToDB(ApiResponseDto apiResponseDto) {
         Map<Long, ApiCharacterDto> externalDtos = Arrays.stream(apiResponseDto.getResults())
                 .collect(Collectors.toMap(ApiCharacterDto::getId, Function.identity()));
@@ -50,8 +69,9 @@ public class MovieCharacterServiceImpl implements MovieCharacterService {
         List<MovieCharacter> existingCharacters = movieCharacterRepository
                 .findAllByExternalIdIn(externalIds);
 
-        Map<Long, MovieCharacter> existingCharactersWithIds = existingCharacters.stream()
-                        .collect(Collectors.toMap(MovieCharacter::getExternalId, Function.identity()));
+        Map<Long, MovieCharacter> existingCharactersWithIds = existingCharacters
+                .stream()
+                .collect(Collectors.toMap(MovieCharacter::getExternalId, Function.identity()));
 
         Set<Long> existingIds = existingCharactersWithIds.keySet();
 
@@ -61,5 +81,10 @@ public class MovieCharacterServiceImpl implements MovieCharacterService {
                 .map(i -> mapper.parseApiCharacterResponseDto(externalDtos.get(i)))
                 .collect(Collectors.toList());
         movieCharacterRepository.saveAll(charactersToSave);
+    }
+
+    @PostConstruct
+    private void init() {
+        syncExternalCharacters();
     }
 }

@@ -1,7 +1,7 @@
 package com.springboot.project.rickandmortyapp.dto.mapper;
 
-import com.springboot.project.rickandmortyapp.dto.ApiCharacterDto;
-import com.springboot.project.rickandmortyapp.dto.ApiResponseDto;
+import com.springboot.project.rickandmortyapp.dto.CharacterResponseDto;
+import com.springboot.project.rickandmortyapp.dto.external.ApiCharacterDto;
 import com.springboot.project.rickandmortyapp.model.Gender;
 import com.springboot.project.rickandmortyapp.model.MovieCharacter;
 import com.springboot.project.rickandmortyapp.model.Status;
@@ -16,5 +16,15 @@ public class MovieCharacterMapper {
         movieCharacter.setStatus(Status.valueOf(dto.getStatus().toUpperCase()));
         movieCharacter.setExternalId(dto.getId());
         return movieCharacter;
+    }
+
+    public CharacterResponseDto toResponseDto(MovieCharacter movieCharacter) {
+        CharacterResponseDto dto = new CharacterResponseDto();
+        dto.setId(movieCharacter.getId());
+        dto.setExternalId(movieCharacter.getExternalId());
+        dto.setName(movieCharacter.getName());
+        dto.setStatus(movieCharacter.getStatus());
+        dto.setGender(movieCharacter.getGender());
+        return dto;
     }
 }
